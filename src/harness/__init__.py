@@ -5,6 +5,13 @@ from enum import Enum
 from pathlib import Path
 from uuid import uuid4
 
+from harness.git_workspace import (
+    changed_paths,
+    create_commit,
+    filter_commit_paths,
+    propose_message,
+)
+
 
 @dataclass(frozen=True)
 class Workspace:
@@ -31,12 +38,15 @@ class Run:
     workspace_path: Path
     agent: Agent
     status: RunStatus
+    proposed_message: str | None = None
+    proposal_attempt: int = 0
 
 
 class Harness:
     def __init__(self) -> None:
         self._workspaces: list[Workspace] = []
         self._runs: list[Run] = []
+        self._denylist: list[str] = []
 
     def register_workspace(self, path: str | Path) -> Workspace:
         resolved = Path(path).resolve()
@@ -54,6 +64,12 @@ class Harness:
     def list_workspaces(self) -> list[Workspace]:
         return list(self._workspaces)
 
+    def set_denylist(self, patterns: list[str]) -> None:
+        self._denylist = list(patterns)
+
+    def list_denylist(self) -> list[str]:
+        return list(self._denylist)
+
     def start_run(self, workspace_path: str | Path, agent: Agent) -> Run:
         resolved = Path(workspace_path).resolve()
         if not any(w.path == resolved for w in self._workspaces):
@@ -69,6 +85,8 @@ class Harness:
             agent=agent,
             status=RunStatus.RUNNING,
         )
+        if agent == Agent.COMMITTER:
+            run = self._with_commit_proposal(run, attempt=1)
         self._runs.append(run)
         return run
 
@@ -83,6 +101,48 @@ class Harness:
             return cancelled
         raise KeyError(f"Unknown Run: {run_id}")
 
+    def reject_commit_message(self, run_id: str) -> Run:
+        run = self._require_running_committer(run_id)
+        updated = self._with_commit_proposal(run, attempt=run.proposal_attempt + 1)
+        self._replace_run(updated)
+        return updated
+
+    def confirm_commit(self, run_id: str) -> Run:
+        run = self._require_running_committer(run_id)
+        if not run.proposed_message:
+            raise RuntimeError(f"Committer Run has no proposed message: {run_id}")
+        paths = filter_commit_paths(
+            changed_paths(run.workspace_path),
+            self._denylist,
+        )
+        create_commit(run.workspace_path, paths, run.proposed_message)
+        completed = replace(run, status=RunStatus.COMPLETED)
+        self._replace_run(completed)
+        return completed
+
     def list_historico(self, workspace_path: str | Path) -> list[Run]:
         resolved = Path(workspace_path).resolve()
         return [run for run in self._runs if run.workspace_path == resolved]
+
+    def _with_commit_proposal(self, run: Run, attempt: int) -> Run:
+        paths = filter_commit_paths(changed_paths(run.workspace_path), self._denylist)
+        message = propose_message(paths, attempt)
+        return replace(run, proposed_message=message, proposal_attempt=attempt)
+
+    def _require_running_committer(self, run_id: str) -> Run:
+        for run in self._runs:
+            if run.id != run_id:
+                continue
+            if run.agent != Agent.COMMITTER:
+                raise RuntimeError(f"Run is not a Committer: {run_id}")
+            if run.status != RunStatus.RUNNING:
+                raise RuntimeError(f"Run is not running: {run_id}")
+            return run
+        raise KeyError(f"Unknown Run: {run_id}")
+
+    def _replace_run(self, updated: Run) -> None:
+        for index, run in enumerate(self._runs):
+            if run.id == updated.id:
+                self._runs[index] = updated
+                return
+        raise KeyError(f"Unknown Run: {updated.id}")
