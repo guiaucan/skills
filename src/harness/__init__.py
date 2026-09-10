@@ -17,6 +17,11 @@ class Harness:
         resolved = Path(path).resolve()
         if not resolved.is_dir():
             raise FileNotFoundError(f"Workspace path is not a directory: {resolved}")
+        if not (resolved / ".git").exists():
+            raise ValueError(f"Workspace path is not a git repository: {resolved}")
+        for existing in self._workspaces:
+            if existing.path == resolved:
+                return existing
         workspace = Workspace(path=resolved)
         self._workspaces.append(workspace)
         return workspace
