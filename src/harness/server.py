@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from mcp.server.fastmcp import FastMCP
 
-from harness import Agent, Harness, Run
+from harness import Agent, Harness, Parecer, Run
 
 _harness = Harness()
 mcp = FastMCP("harness")
@@ -19,7 +19,20 @@ def _run_payload(run: Run) -> dict[str, str]:
     }
     if run.proposed_message is not None:
         payload["proposed_message"] = run.proposed_message
+    if run.review_target is not None:
+        payload["review_target"] = run.review_target
     return payload
+
+
+def _parecer_payload(parecer: Parecer) -> dict[str, str]:
+    return {
+        "id": parecer.id,
+        "run_id": parecer.run_id,
+        "workspace_path": str(parecer.workspace_path),
+        "target": parecer.target,
+        "verdict": parecer.verdict.value,
+        "notes": parecer.notes,
+    }
 
 
 @mcp.tool()
@@ -51,14 +64,19 @@ def set_denylist(patterns: list[str]) -> list[str]:
 
 
 @mcp.tool()
-def start_run(workspace_path: str, agent: str) -> dict[str, str]:
+def start_run(
+    workspace_path: str,
+    agent: str,
+    target: str | None = None,
+) -> dict[str, str]:
     """Dispara um Run de um Agent num Workspace registrado.
 
     Args:
         workspace_path: Path do Workspace registrado.
         agent: Nome do Agent (stub, coder, reviewer, committer).
+        target: Alvo opcional do Reviewer (obrigatório se não houver @{upstream}).
     """
-    run = _harness.start_run(workspace_path, Agent(agent))
+    run = _harness.start_run(workspace_path, Agent(agent), target=target)
     return _run_payload(run)
 
 
@@ -100,6 +118,16 @@ def list_historico(workspace_path: str) -> list[dict[str, str]]:
         workspace_path: Path do Workspace.
     """
     return [_run_payload(run) for run in _harness.list_historico(workspace_path)]
+
+
+@mcp.tool()
+def list_pareceres(workspace_path: str) -> list[dict[str, str]]:
+    """Lista os Pareceres do Histórico de um Workspace.
+
+    Args:
+        workspace_path: Path do Workspace.
+    """
+    return [_parecer_payload(p) for p in _harness.list_pareceres(workspace_path)]
 
 
 def main() -> None:

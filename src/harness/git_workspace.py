@@ -55,3 +55,19 @@ def create_commit(cwd: Path, paths: list[str], message: str) -> None:
         raise RuntimeError("No paths left to commit after gitignore and Denylist")
     git(cwd, "add", "--", *paths)
     git(cwd, "commit", "-m", message)
+
+
+def upstream_ref(cwd: Path) -> str | None:
+    result = subprocess.run(
+        ["git", "rev-parse", "--abbrev-ref", "@{upstream}"],
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        return None
+    return result.stdout.strip() or None
+
+
+def review_diff(cwd: Path, base: str) -> str:
+    return git(cwd, "diff", base)

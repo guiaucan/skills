@@ -10,6 +10,8 @@ from harness.git_workspace import (
     create_commit,
     filter_commit_paths,
     propose_message,
+    review_diff,
+    upstream_ref,
 )
 
 
@@ -32,6 +34,12 @@ class RunStatus(str, Enum):
     FAILED = "failed"
 
 
+class ParecerVerdict(str, Enum):
+    APROVADO = "aprovado"
+    COM_RESSALVAS = "com_ressalvas"
+    REJEITADO = "rejeitado"
+
+
 @dataclass(frozen=True)
 class Run:
     id: str
@@ -40,6 +48,17 @@ class Run:
     status: RunStatus
     proposed_message: str | None = None
     proposal_attempt: int = 0
+    review_target: str | None = None
+
+
+@dataclass(frozen=True)
+class Parecer:
+    id: str
+    run_id: str
+    workspace_path: Path
+    target: str
+    verdict: ParecerVerdict
+    notes: str
 
 
 class Harness:
@@ -47,6 +66,7 @@ class Harness:
         self._workspaces: list[Workspace] = []
         self._runs: list[Run] = []
         self._denylist: list[str] = []
+        self._pareceres: list[Parecer] = []
 
     def register_workspace(self, path: str | Path) -> Workspace:
         resolved = Path(path).resolve()
@@ -70,7 +90,12 @@ class Harness:
     def list_denylist(self) -> list[str]:
         return list(self._denylist)
 
-    def start_run(self, workspace_path: str | Path, agent: Agent) -> Run:
+    def start_run(
+        self,
+        workspace_path: str | Path,
+        agent: Agent,
+        target: str | None = None,
+    ) -> Run:
         resolved = Path(workspace_path).resolve()
         if not any(w.path == resolved for w in self._workspaces):
             raise ValueError(f"Workspace is not registered: {resolved}")
@@ -87,6 +112,12 @@ class Harness:
         )
         if agent == Agent.COMMITTER:
             run = self._with_commit_proposal(run, attempt=1)
+            self._runs.append(run)
+            return run
+        if agent == Agent.REVIEWER:
+            run = self._complete_review(run, target)
+            self._runs.append(run)
+            return run
         self._runs.append(run)
         return run
 
@@ -123,6 +154,46 @@ class Harness:
     def list_historico(self, workspace_path: str | Path) -> list[Run]:
         resolved = Path(workspace_path).resolve()
         return [run for run in self._runs if run.workspace_path == resolved]
+
+    def list_pareceres(self, workspace_path: str | Path) -> list[Parecer]:
+        resolved = Path(workspace_path).resolve()
+        return [p for p in self._pareceres if p.workspace_path == resolved]
+
+    def _complete_review(self, run: Run, target: str | None) -> Run:
+        review_target = target
+        if review_target is None:
+            if upstream_ref(run.workspace_path) is None:
+                raise ValueError(
+                    "No upstream for default Reviewer target; Operador must define target"
+                )
+            review_target = "@{upstream}"
+        diff = review_diff(run.workspace_path, review_target)
+        parecer = self._build_parecer(run, review_target, diff)
+        self._pareceres.append(parecer)
+        return replace(
+            run,
+            status=RunStatus.COMPLETED,
+            review_target=review_target,
+        )
+
+    def _build_parecer(self, run: Run, target: str, diff: str) -> Parecer:
+        if not diff.strip():
+            verdict = ParecerVerdict.APROVADO
+            notes = "Nenhuma diferença no alvo revisado."
+        elif "FIXME" in diff:
+            verdict = ParecerVerdict.REJEITADO
+            notes = "Diff contém FIXME."
+        else:
+            verdict = ParecerVerdict.COM_RESSALVAS
+            notes = diff if len(diff) < 2000 else diff[:2000] + "\n..."
+        return Parecer(
+            id=str(uuid4()),
+            run_id=run.id,
+            workspace_path=run.workspace_path,
+            target=target,
+            verdict=verdict,
+            notes=notes,
+        )
 
     def _with_commit_proposal(self, run: Run, attempt: int) -> Run:
         paths = filter_commit_paths(changed_paths(run.workspace_path), self._denylist)
