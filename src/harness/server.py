@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from mcp.server.fastmcp import FastMCP
 
-from harness import Harness
+from harness import Agent, Harness
 
 _harness = Harness()
 mcp = FastMCP("harness")
@@ -15,7 +15,7 @@ def register_workspace(path: str) -> str:
     """Registra um Workspace local no Harness.
 
     Args:
-        path: Caminho absoluto ou relativo de uma pasta local existente.
+        path: Caminho absoluto ou relativo de uma pasta local existente (repo git).
     """
     workspace = _harness.register_workspace(path)
     return str(workspace.path)
@@ -25,6 +25,57 @@ def register_workspace(path: str) -> str:
 def list_workspaces() -> list[str]:
     """Lista os Workspaces registrados no Harness."""
     return [str(w.path) for w in _harness.list_workspaces()]
+
+
+@mcp.tool()
+def start_run(workspace_path: str, agent: str) -> dict[str, str]:
+    """Dispara um Run de um Agent num Workspace registrado.
+
+    Args:
+        workspace_path: Path do Workspace registrado.
+        agent: Nome do Agent (stub, coder, reviewer, committer).
+    """
+    run = _harness.start_run(workspace_path, Agent(agent))
+    return {
+        "id": run.id,
+        "workspace_path": str(run.workspace_path),
+        "agent": run.agent.value,
+        "status": run.status.value,
+    }
+
+
+@mcp.tool()
+def cancel_run(run_id: str) -> dict[str, str]:
+    """Cancela um Run em andamento. Não altera o Workspace.
+
+    Args:
+        run_id: Identificador do Run.
+    """
+    run = _harness.cancel_run(run_id)
+    return {
+        "id": run.id,
+        "workspace_path": str(run.workspace_path),
+        "agent": run.agent.value,
+        "status": run.status.value,
+    }
+
+
+@mcp.tool()
+def list_historico(workspace_path: str) -> list[dict[str, str]]:
+    """Lista o Histórico de Runs de um Workspace.
+
+    Args:
+        workspace_path: Path do Workspace.
+    """
+    return [
+        {
+            "id": run.id,
+            "workspace_path": str(run.workspace_path),
+            "agent": run.agent.value,
+            "status": run.status.value,
+        }
+        for run in _harness.list_historico(workspace_path)
+    ]
 
 
 def main() -> None:
