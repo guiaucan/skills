@@ -1,0 +1,5 @@
+interface:
+  display_name: "Grill com docs"
+  short_description: "Grella o desenho e grava glossário/ADRs"
+policy:
+  allow_implicit_invocation: false

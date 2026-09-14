@@ -1,0 +1,5 @@
+interface:
+  display_name: "Para spec"
+  short_description: "Conversa → spec em .scratch/specs"
+policy:
+  allow_implicit_invocation: false

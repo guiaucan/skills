@@ -1,0 +1,5 @@
+interface:
+  display_name: "Implementar"
+  short_description: "Spec/ticket → código (sem commit autônomo)"
+policy:
+  allow_implicit_invocation: false

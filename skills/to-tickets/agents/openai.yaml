@@ -1,0 +1,5 @@
+interface:
+  display_name: "Para tickets"
+  short_description: "Plano/spec → tickets em .scratch/issues"
+policy:
+  allow_implicit_invocation: false

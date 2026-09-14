@@ -1,0 +1,5 @@
+interface:
+  display_name: "Revisar código"
+  short_description: "Revisa diff em Standards e Spec"
+policy:
+  allow_implicit_invocation: false

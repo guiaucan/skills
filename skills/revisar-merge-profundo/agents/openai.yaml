@@ -1,0 +1,6 @@
+interface:
+  display_name: "Revisar merge (profundo)"
+  short_description: "Deep review do que entra no target (MR/PR ou branch)"
+  default_prompt: "Faça review profundo do que entra na branch de destino (MR/PR ou branch local vs base), com Problemas e Questionamentos baseados em evidência."
+policy:
+  allow_implicit_invocation: false
