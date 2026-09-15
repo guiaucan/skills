@@ -1,5 +1,5 @@
 interface:
   display_name: "Abrir merge"
-  short_description: "Abre MR/PR (GitLab/GitHub/Azure) com defaults em .scratch"
+  short_description: "Abre MR/PR (GitLab/GitHub/Azure); defaults em ~/.agents/work"
 policy:
   allow_implicit_invocation: false

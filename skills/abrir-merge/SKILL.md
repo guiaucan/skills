@@ -3,7 +3,8 @@ name: abrir-merge
 description: >
   Abre ou atualiza Merge Request / Pull Request (GitLab, GitHub, Azure DevOps, etc.)
   a partir do estado real do git: target, descrição Markdown, promoção, predecessores.
-  Pergunta o necessário; grava padrões do projeto em .scratch/forge-defaults.md.
+  Pergunta o necessário; grava padrões do projeto em $WORK/forge-defaults.md
+  (~/.agents/work/<marca>/).
   Preferir MCP da forge; CLI (glab/gh/az) só como fallback. Use /abrir-merge.
 disable-model-invocation: true
 ---
@@ -26,17 +27,17 @@ Opcional antes de abrir: `/revisar-merge-profundo` (branch ou URL do MR|PR) para
 
 ## Defaults do projeto (não perguntar de novo)
 
-Arquivo: **`.scratch/forge-defaults.md`**
+Resolver `$WORK` conforme [../work-path.md](../work-path.md): `.scratch-id` → slug `origin` → se sem origin, perguntar e **oferecer** criar `.scratch-id`.
+
+Arquivo: **`$WORK/forge-defaults.md`**
 
 No **início** da skill:
 
 1. Se o arquivo existir → ler e aplicar (forge, MCP, targets usuais, padrão de título, promoção, etc.).
 2. O que **não** estiver no arquivo e for necessário → **perguntar**.
-3. Ao fim (ou quando o usuário confirmar um padrão novo) → **atualizar** `.scratch/forge-defaults.md` com o que ficou decidido.
+3. Ao fim (ou quando o usuário confirmar um padrão novo) → **atualizar** `$WORK/forge-defaults.md` com o que ficou decidido.
 
-Não versionar `.scratch/` sem pedido explícito.
-
-### Template sugerido de `.scratch/forge-defaults.md`
+### Template sugerido de `$WORK/forge-defaults.md`
 
 ```md
 # Forge defaults (local)
@@ -68,7 +69,7 @@ Não versionar `.scratch/` sem pedido explícito.
 
 Ordem:
 
-1. `.scratch/forge-defaults.md`
+1. `$WORK/forge-defaults.md`
 2. Inferir pelo `origin` (`gitlab.com` / `github.com` / `dev.azure.com` / host self-hosted)
 3. Se ainda dúbio → **perguntar**: GitLab, GitHub, Azure ou outro?
 
@@ -140,7 +141,7 @@ Mostrar ao usuário: forge, source → target, título, se é promoção, se fec
 
 Via MCP da forge (preferido) ou CLI. Devolver **URL** ao usuário.
 
-Atualizar `.scratch/forge-defaults.md` com o que foi aprendido nesta sessão (forge, MCP, targets, padrão de título, hábito de promoção).
+Atualizar `$WORK/forge-defaults.md` com o que foi aprendido nesta sessão (forge, MCP, targets, padrão de título, hábito de promoção).
 
 ---
 
@@ -253,7 +254,7 @@ Sem issue confiável → perguntar antes de criar.
 
 ## Checklist final
 
-- [ ] Defaults lidos/atualizados em `.scratch/forge-defaults.md`
+- [ ] Defaults lidos/atualizados em `$WORK/forge-defaults.md`
 - [ ] Forge + MCP/CLI definidos
 - [ ] Target claro; promoção perguntada/resolvida
 - [ ] 2–3 MR|PR de referência lidos (estilo); descrição no **template padrão** + evidência do diff

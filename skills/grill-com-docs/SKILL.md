@@ -15,30 +15,31 @@ Skill completa em PT-BR (`grill-with-docs` + `grilling` + `domain-modeling`).
 
 Idioma: **português (Brasil)**, salvo pedido contrário.
 
-Formatos: [CONTEXT-FORMAT.md](./CONTEXT-FORMAT.md) · [ADR-FORMAT.md](./ADR-FORMAT.md)
+Formatos: [CONTEXT-FORMAT.md](./CONTEXT-FORMAT.md) · [ADR-FORMAT.md](./ADR-FORMAT.md)  
+Raiz de artefatos: [../work-path.md](../work-path.md) (`$WORK` = `~/.agents/work/<marca>/`).
 
-## Onde gravar (projeto em que a skill roda)
+## Onde gravar
 
-Tudo sob **`.scratch/`** (local; peça para o projeto ter `.scratch/` no `.gitignore`):
+Resolver `$WORK` conforme [work-path.md](../work-path.md): `.scratch-id` → slug `origin` → se sem origin, perguntar e **oferecer** criar `.scratch-id`. Path absoluto, home do SO.
 
 | Artefato | Path |
 |----------|------|
-| Glossário | `.scratch/CONTEXT.md` |
-| Mapa (multi-contexto) | `.scratch/CONTEXT-MAP.md` |
-| ADRs | `.scratch/docs/adr/` |
-| Specs | `.scratch/specs/` |
-| Tickets | `.scratch/issues/` |
-| Plano / notas do grill | `.scratch/plano.md` |
+| Glossário | `$WORK/CONTEXT.md` |
+| Mapa (multi-contexto) | `$WORK/CONTEXT-MAP.md` |
+| ADRs | `$WORK/docs/adr/` |
+| Specs | `$WORK/specs/` |
+| Tickets | `$WORK/issues/` |
+| Plano / notas do grill | `$WORK/plano.md` |
 
-**Nunca** grave esses artefatos na raiz do projeto.  
-**Git:** **nunca** execute `git commit` nem `git push` sozinho — só sugira quando couber e espere ok explícito do usuário. Idem para `git add` de `.scratch/` (ou qualquer path local) sem pedido.
+**Nunca** grave esses artefatos na raiz do projeto (nem em `.scratch/` novo).  
+**Git:** **nunca** execute `git commit` nem `git push` sozinho — só sugira quando couber e espere ok explícito do usuário.
 
 ---
 
 ## Arranque
 
 1. Ler este `SKILL.md`
-2. Ler `.scratch/CONTEXT.md` (criar a pasta/arquivo quando o primeiro termo fechar)
+2. Resolver `$WORK`; ler `$WORK/CONTEXT.md` (criar quando o primeiro termo fechar)
 3. Rodada 1 da fronteira + domain-modeling em paralelo
 4. Não implementar até confirmação de entendimento compartilhado
 
@@ -73,7 +74,7 @@ Você é um Engenheiro de Software Sênior extremamente pragmático, disciplinad
 
 ### 5. Regras para assistentes de IA
 
-- Consulte `.scratch/CONTEXT.md` (ou faça a sabatina) antes de task complexa.
+- Consulte `$WORK/CONTEXT.md` (ou faça a sabatina) antes de task complexa.
 - Sem over-engineering / arquivos grandes fora do escopo.
 - Valide com linter/build/testes do repo antes de entregar.
 - Nesta skill: **não implementar** até entendimento compartilhado confirmado.
@@ -99,7 +100,7 @@ Entreviste até **entendimento compartilhado**. Mapeie como **árvore de desenho
 - **Fatos** = agente busca (tools/subagente). **Decisões** = usuário.
 - Exploração em andamento não bloqueia o resto da fronteira.
 - Fronteira vazia → confirmar entendimento → só então implementar.
-- Ao fechar (ou se o usuário pedir), salve o resumo do plano em `.scratch/plano.md`.
+- Ao fechar (ou se o usuário pedir), salve o resumo do plano em `$WORK/plano.md`.
 
 ---
 
@@ -107,10 +108,10 @@ Entreviste até **entendimento compartilhado**. Mapeie como **árvore de desenho
 
 Afie o domínio **enquanto** grella: termos, cenários de borda, glossário/ADRs na hora.
 
-Criar preguiçosamente sob `.scratch/`:
-- `.scratch/CONTEXT.md` no primeiro termo
-- `.scratch/docs/adr/` no primeiro ADR
-- specs/tickets só se o fluxo pedir → `.scratch/specs/`, `.scratch/issues/`
+Criar preguiçosamente sob `$WORK`:
+- `$WORK/CONTEXT.md` no primeiro termo
+- `$WORK/docs/adr/` no primeiro ADR
+- specs/tickets só se o fluxo pedir → `$WORK/specs/`, `$WORK/issues/`
 
 - Confrontar glossário · afiar linguagem vaga · cenários concretos · cruzar com código
 - Glossário = **só** o que o termo É (sem implementação)
@@ -122,11 +123,11 @@ Criar preguiçosamente sob `.scratch/`:
 
 - [ ] Rodadas com recomendações (PT-BR)
 - [ ] Fatos pelo agente; decisões pelo usuário
-- [ ] Artefatos só em `.scratch/`
+- [ ] Artefatos só em `$WORK` (`~/.agents/work/<marca>/`)
 - [ ] Glossário atualizado na hora
 - [ ] ADRs só com os 3 critérios
 - [ ] Confirmação antes de implementar
-- [ ] Sem `git commit` / `git push` autônomos; sem versionar `.scratch/` sem pedido explícito
+- [ ] Sem `git commit` / `git push` autônomos
 
 ---
 

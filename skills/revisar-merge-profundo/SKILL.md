@@ -28,8 +28,10 @@ Podem rodar em sequência; não substituem uma à outra.
 
 ## Defaults
 
-Ler `.scratch/forge-defaults.md` se existir (targets, forge, MCP, promoção sim/não).  
-Contexto coletado → preferir gravar em **`.scratch/review-context.md`** (não versionar).
+Resolver `$WORK` conforme [../work-path.md](../work-path.md): `.scratch-id` → slug `origin` → se sem origin, perguntar e **oferecer** criar `.scratch-id`.
+
+Ler `$WORK/forge-defaults.md` se existir (targets, forge, MCP, promoção sim/não).  
+Contexto coletado → preferir gravar em **`$WORK/review-context.md`**.
 
 ---
 
@@ -50,14 +52,14 @@ Contexto coletado → preferir gravar em **`.scratch/review-context.md`** (não 
 Usar o script (recomendado):
 
 ```bash
-# MR/PR
-python skills/revisar-merge-profundo/scripts/collect_review_context.py --mr-url "<url>" --output .scratch/review-context.md
+# MR/PR — --output com path absoluto sob $WORK
+python skills/revisar-merge-profundo/scripts/collect_review_context.py --mr-url "<url>" --output "$WORK/review-context.md"
 
 # Branch local vs base
-python skills/revisar-merge-profundo/scripts/collect_review_context.py --base-branch qas --output .scratch/review-context.md
+python skills/revisar-merge-profundo/scripts/collect_review_context.py --base-branch qas --output "$WORK/review-context.md"
 ```
 
-Se o path da skill no ambiente for outro (`~/.agents/skills/...`), ajuste o caminho do script.
+`$WORK` = `~/.agents/work/<marca>/` (path absoluto no SO atual). Se o path da skill no ambiente for outro (`~/.agents/skills/...`), ajuste o caminho do script.
 
 **Preferência de coleta:** MCP da forge (se disponível) **ou** script (`glab`/`gh`/git). Se CLI falhar, cair para git local e declarar a limitação.
 
@@ -93,7 +95,7 @@ Oportunidades só se melhorarem manutenção/flexibilidade/segurança de forma m
 
 Fluxo típico: `release-candidate → feature`, depois MRs diretos `feature → qas` / `homologacao` / de volta a `release-candidate`.
 
-Se **`.scratch/forge-defaults.md`** disser que o projeto usa **branch de promoção**, revise também a topologia de promoção (ver `/abrir-merge`); não assuma “nunca há promoção”.
+Se **`$WORK/forge-defaults.md`** disser que o projeto usa **branch de promoção**, revise também a topologia de promoção (ver `/abrir-merge`); não assuma “nunca há promoção”.
 
 Merges `qas|homologacao|release-candidate → feature` = sync/resolução de conflito só quando esse ambiente é o **target do MR atual** — não são a direção de promoção.
 
@@ -157,6 +159,6 @@ Preferir poucos achados de alto sinal. Nits de estilo só se afetarem legibilida
 ## Checklist
 
 - [ ] Target definido (MR/PR ou `--base-branch`)
-- [ ] Contexto em `.scratch/review-context.md` (ou stdout) + código ao redor lido
+- [ ] Contexto em `$WORK/review-context.md` (ou stdout) + código ao redor lido
 - [ ] Relatório: Problemas + Questionamentos + Testes (+ Melhorias se couber)
 - [ ] Sem commit/push

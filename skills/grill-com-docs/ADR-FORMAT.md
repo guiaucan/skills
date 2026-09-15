@@ -1,6 +1,7 @@
 # Formato de ADR
 
-ADRs em **`.scratch/docs/adr/`**: `0001-slug.md`, `0002-slug.md`, …  
+ADRs em **`$WORK/docs/adr/`**: `0001-slug.md`, `0002-slug.md`, …  
+`$WORK` = `~/.agents/work/<marca>/` — ver [../work-path.md](../work-path.md).  
 Criar a pasta só no primeiro ADR.
 
 ## Template
@@ -17,7 +18,7 @@ Status, opções consideradas, consequências — só se agregarem valor.
 
 ## Numeração
 
-Maior número em `.scratch/docs/adr/` + 1.
+Maior número em `$WORK/docs/adr/` + 1.
 
 ## Quando oferecer
 

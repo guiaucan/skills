@@ -1,5 +1,5 @@
 interface:
   display_name: "Para spec"
-  short_description: "Conversa → spec em .scratch/specs"
+  short_description: "Conversa → spec em ~/.agents/work/.../specs"
 policy:
   allow_implicit_invocation: false

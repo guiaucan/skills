@@ -2,8 +2,10 @@
 """Coleta artefatos de review: GitLab MR, GitHub PR ou branch local vs base.
 
 Exemplos:
-  python collect_review_context.py --base-branch qas --output .scratch/review-context.md
-  python collect_review_context.py --mr-url "https://gitlab.../merge_requests/123" --output .scratch/review-context.md
+  python collect_review_context.py --base-branch qas --output "%USERPROFILE%/.agents/work/<marca>/review-context.md"
+  python collect_review_context.py --mr-url "https://gitlab.../merge_requests/123" --output ~/.agents/work/<marca>/review-context.md
+
+Prefira path absoluto sob ~/.agents/work/<marca>/ (ver skills/work-path.md).
 """
 
 from __future__ import annotations
@@ -212,7 +214,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--output",
-        help="Arquivo de saída (.md). Preferir .scratch/review-context.md. Sem isso, imprime no stdout.",
+        help="Arquivo de saída (.md). Preferir path absoluto em ~/.agents/work/<marca>/review-context.md. Sem isso, imprime no stdout.",
     )
     return parser.parse_args()
 

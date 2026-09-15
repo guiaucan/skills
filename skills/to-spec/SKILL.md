@@ -1,8 +1,8 @@
 ---
 name: to-spec
 description: >
-  Transforma a conversa atual em uma spec e grava em .scratch/specs/.
-  Sem entrevista — só síntese do que já foi discutido. Use /to-spec.
+  Transforma a conversa atual em uma spec e grava em $WORK/specs/
+  (~/.agents/work/<marca>/). Sem entrevista — só síntese do que já foi discutido. Use /to-spec.
 disable-model-invocation: true
 ---
 
@@ -14,26 +14,26 @@ Idioma: **português (Brasil)**, salvo pedido contrário.
 
 ## Onde gravar
 
+Resolver `$WORK` conforme [../work-path.md](../work-path.md): `.scratch-id` → slug `origin` → se sem origin, perguntar e **oferecer** criar `.scratch-id`.
+
 | Artefato | Path |
 |----------|------|
-| Spec | `.scratch/specs/<slug>.md` |
-| Glossário (ler) | `.scratch/CONTEXT.md` |
-| ADRs (respeitar) | `.scratch/docs/adr/` |
+| Spec | `$WORK/specs/<slug>.md` |
+| Glossário (ler) | `$WORK/CONTEXT.md` |
+| ADRs (respeitar) | `$WORK/docs/adr/` |
 
-Garanta que `.scratch/` está no `.gitignore` do projeto.
-
-**Git:** **nunca** execute `git commit` nem `git push` sozinho. **Nunca** `git add`/commit de `.scratch/` (nem de outros artefatos locais) sem o usuário pedir explicitamente.
+**Git:** **nunca** execute `git commit` nem `git push` sozinho. Artefatos ficam fora do repo (`$WORK`); não versionar conteúdo de work sem pedido.
 
 Se o usuário pedir publicação num tracker (GitHub/Linear), use o tracker; senão o padrão é **arquivo local** acima.
 
 ## Processo
 
-1. **Explorar o repo** (se ainda não fez). Use o vocabulário do glossário (`.scratch/CONTEXT.md`) e respeite ADRs em `.scratch/docs/adr/`.
+1. **Explorar o repo** (se ainda não fez). Use o vocabulário do glossário (`$WORK/CONTEXT.md`) e respeite ADRs em `$WORK/docs/adr/`.
 
 2. **Esboçar as seams de teste** da feature. Prefira seams existentes. Use a seam mais alta possível. Ideal: poucas seams (no limite, uma).  
    Confirme com o usuário se essas seams batem com a expectativa dele.
 
-3. **Escrever a spec** com o template abaixo e gravar em `.scratch/specs/<slug>.md` (slug curto em kebab-case). Marque status mental `ready-for-agent`.
+3. **Escrever a spec** com o template abaixo e gravar em `$WORK/specs/<slug>.md` (slug curto em kebab-case). Marque status mental `ready-for-agent`.
 
 ## Template da spec
 
@@ -91,7 +91,7 @@ Qualquer nota adicional.
 
 ## Checklist
 
-- [ ] Spec em `.scratch/specs/`
+- [ ] Spec em `$WORK/specs/`
 - [ ] Vocabulário do glossário
 - [ ] Seams confirmadas com o usuário
-- [ ] Sem `git commit` / `git push` autônomos; sem versionar `.scratch/` sem pedido
+- [ ] Sem `git commit` / `git push` autônomos

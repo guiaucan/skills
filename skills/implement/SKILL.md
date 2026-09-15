@@ -14,12 +14,14 @@ Idioma: **português (Brasil)**, salvo pedido contrário.
 
 ## Entradas (ler)
 
+Resolver `$WORK` conforme [../work-path.md](../work-path.md): `.scratch-id` → slug `origin` → se sem origin, perguntar e **oferecer** criar `.scratch-id`.
+
 | Fonte | Path típico |
 |-------|-------------|
-| Ticket | `.scratch/issues/<NN>-….md` |
-| Spec | `.scratch/specs/<slug>.md` |
-| Glossário | `.scratch/CONTEXT.md` |
-| ADRs | `.scratch/docs/adr/` |
+| Ticket | `$WORK/issues/<NN>-….md` |
+| Spec | `$WORK/specs/<slug>.md` |
+| Glossário | `$WORK/CONTEXT.md` |
+| ADRs | `$WORK/docs/adr/` |
 
 Use o vocabulário do glossário. Não invente escopo fora da spec/ticket.
 
@@ -35,7 +37,7 @@ Use o vocabulário do glossário. Não invente escopo fora da spec/ticket.
 6. **Self-review** (e `/revisar-codigo` e/ou `/revisar-merge-profundo` se existirem e o usuário quiser).
 7. **No final da sessão:** bloco **Sugestão de commit** (ver formato abaixo).  
 
-**Git (regra absoluta):** **nunca** execute `git commit` nem `git push` sozinho — só sugira a mensagem e espere ok explícito do usuário. **Nunca** incluir `.scratch/` (nem `git add` dele) sem pedido explícito. Criar branch só depois do ok (ver seção Branch).
+**Git (regra absoluta):** **nunca** execute `git commit` nem `git push` sozinho — só sugira a mensagem e espere ok explícito do usuário. Artefatos de spec/ticket ficam em `$WORK` (fora do repo). Criar branch só depois do ok (ver seção Branch).
 
 ### Branch — o que perguntar / inferir
 

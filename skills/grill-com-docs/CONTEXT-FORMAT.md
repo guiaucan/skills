@@ -20,6 +20,7 @@ _Avoid_: sinônimo1, sinônimo2
 
 ## Onde fica
 
-**`.scratch/CONTEXT.md`** (mapa: `.scratch/CONTEXT-MAP.md` se houver vários contextos).
+**`$WORK/CONTEXT.md`** (mapa: `$WORK/CONTEXT-MAP.md` se houver vários contextos).  
+`$WORK` = `~/.agents/work/<marca>/` — ver [../work-path.md](../work-path.md).
 
 Criar de forma preguiçosa quando o primeiro termo for resolvido.

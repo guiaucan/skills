@@ -1,5 +1,5 @@
 interface:
   display_name: "Para tickets"
-  short_description: "Plano/spec → tickets em .scratch/issues"
+  short_description: "Plano/spec → tickets em ~/.agents/work/.../issues"
 policy:
   allow_implicit_invocation: false

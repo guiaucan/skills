@@ -2,7 +2,7 @@
 name: to-tickets
 description: >
   Quebra plano, spec ou conversa em tickets tracer-bullet com arestas de bloqueio,
-  gravados em .scratch/issues/. Use /to-tickets.
+  gravados em $WORK/issues/ (~/.agents/work/<marca>/). Use /to-tickets.
 disable-model-invocation: true
 ---
 
@@ -14,16 +14,16 @@ Idioma: **português (Brasil)**, salvo pedido contrário.
 
 ## Onde gravar
 
+Resolver `$WORK` conforme [../work-path.md](../work-path.md): `.scratch-id` → slug `origin` → se sem origin, perguntar e **oferecer** criar `.scratch-id`.
+
 | Artefato | Path |
 |----------|------|
-| Tickets | `.scratch/issues/<NN>-<slug>.md` (a partir de `01`, blockers primeiro) |
-| Spec de origem (ler) | `.scratch/specs/` ou path que o usuário passar |
-| Glossário (ler) | `.scratch/CONTEXT.md` |
-| ADRs (respeitar) | `.scratch/docs/adr/` |
+| Tickets | `$WORK/issues/<NN>-<slug>.md` (a partir de `01`, blockers primeiro) |
+| Spec de origem (ler) | `$WORK/specs/` ou path que o usuário passar |
+| Glossário (ler) | `$WORK/CONTEXT.md` |
+| ADRs (respeitar) | `$WORK/docs/adr/` |
 
-`.scratch/` no `.gitignore`.
-
-**Git:** **nunca** execute `git commit` nem `git push` sozinho. **Nunca** `git add`/commit de `.scratch/` (nem de outros artefatos locais) sem o usuário pedir explicitamente.
+**Git:** **nunca** execute `git commit` nem `git push` sozinho. Artefatos em `$WORK` (fora do repo).
 
 Padrão = **arquivos locais**. Tracker real (GitHub/Linear) só se o usuário pedir.
 
@@ -68,7 +68,7 @@ Itere até aprovar.
 
 Só depois da aprovação:
 
-- **Local:** um arquivo por ticket em `.scratch/issues/<NN>-<slug>.md`
+- **Local:** um arquivo por ticket em `$WORK/issues/<NN>-<slug>.md`
 - **Tracker:** só se pedido; label `ready-for-agent` se existir
 
 Trabalhe a **fronteira**: tickets cujos blockers já estão feitos.
@@ -95,6 +95,6 @@ Evite paths de arquivo e snippets (envelhecem). Exceção: trecho de protótipo 
 ## Checklist
 
 - [ ] Breakdown aprovado pelo usuário
-- [ ] Arquivos em `.scratch/issues/`
+- [ ] Arquivos em `$WORK/issues/`
 - [ ] Vocabulário do glossário
-- [ ] Sem `git commit` / `git push` autônomos; sem versionar `.scratch/` sem pedido
+- [ ] Sem `git commit` / `git push` autônomos

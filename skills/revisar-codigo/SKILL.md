@@ -40,10 +40,10 @@ Nesta ordem:
 
 1. Referências a issue nas mensagens de commit (`#123`, `Closes #45`, chave Jira, etc.) — buscar no tracker se configurado
 2. Path que o usuário passou
-3. Arquivo em `.scratch/specs/`, `.scratch/issues/`, `docs/`, `specs/` que case com a branch/feature
+3. Arquivo em `$WORK/specs/`, `$WORK/issues/`, `docs/`, `specs/` que case com a branch/feature
 4. Se nada achar → pergunte. Se o usuário disser que não há spec → eixo Spec **pula** e reporta “sem spec disponível”
 
-Use também `.scratch/CONTEXT.md` / ADRs em `.scratch/docs/adr/` para vocabulário, quando existirem.
+Resolver `$WORK` conforme [../work-path.md](../work-path.md). Use também `$WORK/CONTEXT.md` / ADRs em `$WORK/docs/adr/` para vocabulário, quando existirem.
 
 ### 3. Achar fontes de Standards
 

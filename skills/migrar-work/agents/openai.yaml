@@ -1,0 +1,5 @@
+interface:
+  display_name: "Migrar work"
+  short_description: "Migra .scratch/ do projeto para ~/.agents/work/<marca>"
+policy:
+  allow_implicit_invocation: false
